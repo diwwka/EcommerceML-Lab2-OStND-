@@ -8,7 +8,7 @@ class Program
     {
         var mlContext = new MLContext(seed: 0);
 
-        // Вкажи шлях до завантаженого файлу з Kaggle
+        // Щлях до завантаженого файлу з Kaggle
         var dataPath = "online_shoppers_intention.csv";
 
         Console.WriteLine("Loading data...");
@@ -43,5 +43,19 @@ class Program
         // Зберігаємо модель у ZIP файл
         mlContext.Model.Save(model, dataView.Schema, "EcommerceModel.zip");
         Console.WriteLine("Model Saved as 'EcommerceModel.zip'!");
+
+        // ... (весь попередній код тренування з Лаб 2) ...
+
+        Console.WriteLine("Збереження у форматі ONNX...");
+
+        // Створюємо потік для збереження файлу
+        using (var stream = File.Create("EcommerceModel.onnx"))
+        {
+            // Конвертуємо та зберігаємо модель
+            // Важливо: ML.NET потребує знати вхідну схему (dataView)
+            mlContext.Model.ConvertToOnnx(model, dataView, stream);
+        }
+
+        Console.WriteLine("Model Saved as 'EcommerceModel.onnx'!");
     }
 }
